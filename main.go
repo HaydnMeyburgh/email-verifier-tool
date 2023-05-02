@@ -38,5 +38,18 @@ func checkDomain(domain string) {
 		hasMX = true
 	}
 
-	
+	// Looking up SPF/text records of the domain
+	txtRecords, err := net.LookupTXT(domain)
+
+	if err != nil {
+		log.Printf("Error: %v\n", err)
+	}
+
+	for _, record := range txtRecords {
+		if strings.HasPrefix(record, "v=spf1") {
+			hasSPF = true
+			spfRecord = record
+			break
+		}
+	}
 }
